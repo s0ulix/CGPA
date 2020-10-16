@@ -68,11 +68,16 @@ def login():
 def register_user():
     username_info = username.get()
     password_info = password.get()
-    mc.execute("insert into cred values(%s,%s)", (username_info, password_info))
-    mydb.commit()
+    mc.execute("select username from cred")
+    a = mc.fetchall()
+    if (username_info,) in a:
+        user_exist()
+    else:
+        mc.execute("insert into cred values(%s,%s)", (username_info, password_info))
+        mydb.commit()
+        register_sucess()
     username_entry.delete(0, END)
     password_entry.delete(0, END)
-    register_sucess()
 #    Label(register_screen, text="Registration Success", fg="green", font=("calibri", 11)).pack()
 
 def login_verify():
@@ -83,7 +88,6 @@ def login_verify():
     mc.execute("select username from cred")
     a=mc.fetchall()
     if (username1,) in a:
-        print("select password FROM cred WHERE username='%s'"%username1)
         mc.execute("select password FROM cred WHERE username='%s'"%username1)
         b=mc.fetchall()
         if (password1,) in b:
@@ -101,6 +105,14 @@ def register_sucess():
     register_success_screen.geometry("150x100")
     Label(register_success_screen, text="Register Success").pack()
     Button(register_success_screen, text="OK", command=delete_register_success).pack()
+
+def user_exist():
+    global user_exist_screen
+    user_exist_screen = Toplevel(register_screen)
+    user_exist_screen.title("Warning")
+    user_exist_screen.geometry("150x100")
+    Label(user_exist_screen, text="User Already exist").pack()
+    Button(user_exist_screen, text="OK", command=delete_user_exist_screen).pack()
 
 def login_sucess():
     global login_success_screen
@@ -138,6 +150,9 @@ def delete_password_not_recognised():
 
 def delete_user_not_found_screen():
     user_not_found_screen.destroy()
+
+def delete_user_exist_screen():
+    user_exist_screen.destroy()
 
 def main():
     global root
