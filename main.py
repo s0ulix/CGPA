@@ -47,6 +47,7 @@ def register():
     register_screen = Toplevel(root)
     register_screen.title("Register")
     register_screen.geometry("300x250")
+    register_screen.iconphoto(False,logo)
 
     #declaring variables
     global username
@@ -78,6 +79,7 @@ def login():
     login_screen = Toplevel(root)
     login_screen.title("Login")
     login_screen.geometry("300x250")
+    login_screen.iconphoto(False,logo)
 
     #Declaring variables
     global username_verify
@@ -102,20 +104,26 @@ def login():
     Button(login_screen, text="Login", width=10, height=1, command=login_verify).pack()
 
 def register_user():
-    username_info = username.get()                                     #getting id
-    unhashed_passwd = password.get()                                   #getting password
-    password_info = (md5(unhashed_passwd.encode())).hexdigest()        #creating hash of password
-    mc.execute("select username from creds")
-    a = mc.fetchall()
-    if (username_info,) in a:                                          #checking is user exist or not
-        user_exist()
-    else:
-        try:                                                          #error handling for non numeric id
-            mc.execute("insert into creds values(%s,%s)", (username_info, password_info))
-            mydb.commit()
-            register_sucess()
-        except:
-            messagebox.showerror(title="Error",message="ID should be numeric")
+    try:
+        username_info = username.get()
+        unhashed_passwd = password.get()                                 # getting password
+        if len(unhashed_passwd)<8:
+            messagebox.showerror(title="Password eroor",message="Password must contain min 8 letters")
+        else:
+            password_info = (md5(unhashed_passwd.encode())).hexdigest()  # creating hash of password
+            mc.execute("select username from creds")
+            a = mc.fetchall()
+            if (username_info,) in a:  # checking is user exist or not
+                user_exist()
+            else:
+                mc.execute("insert into creds values(%s,%s)", (username_info, password_info))
+                mydb.commit()
+                register_sucess()
+    except:
+        messagebox.showerror(title="Error", message="ID should be numeric")
+        register_screen.destroy()
+        register()
+
 
 def login_verify():
     username1 = username_verify.get()                            #getting id
@@ -136,7 +144,7 @@ def login_verify():
 #Messageboxes
 def register_sucess():
     register_screen.destroy()
-    register_success_message = messagebox.showinfo(title="Success", message="ID Registered Successfully")
+    messagebox.showinfo(title="Success", message="ID Registered Successfully")
 
 def user_exist():
     user_exist_message = messagebox.showwarning(title="Warning", message="Registration ID Already exist")
@@ -155,11 +163,16 @@ def user_not_found():
 def main():
 
     #Main gui config
+    global logo
     global root
     root = Tk()
+    logo = PhotoImage(file='logo.png')
     root.geometry("500x375")
     root.title("Account Login")
-    connect_db()
+    root.iconphoto(False,logo)
+
+    connect_db()                             #starting db connection
+
     #lablels and buttons
     Label(text="CGPA Calculator", bg="Black", width="500", height="2", font=("Helvetica", 13), fg="white").pack()
     Label(text="").pack()
