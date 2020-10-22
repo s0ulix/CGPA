@@ -4,28 +4,40 @@ from tkinter import messagebox
 import mysql.connector as m
 from hashlib import md5
 
+
 #connecting to database
-mydb = m.connect( host="127.0.0.1", user="root",password="Jaatram@1729")
-mc = mydb.cursor()
-
-#creating database
-def create_db():
-    try:
-        mc.execute("create database GUI")
+def connect_db():
+    try:                                           #error handling for databse connection
+        global mydb
+        mydb = m.connect( host="127.0.0.1", user="root",password="Jaatram@1729")
     except:
-        print("database already created")
-create_db()
+        warning="Check if database is started or not \n If started enter your creds in command line"
+        messagebox.showwarning(title="Db error",message=warning)
+        h=input("enter host: ")
+        u=input("enter username: ")
+        p=input("enter password: ")
+        mydb = m.connect(host=h, user=u, password=p)
+    global mc
+    mc = mydb.cursor()
 
-#using database
-mc.execute("use GUI")
+    #creating database
+    def create_db():
+        try:                                          #error handling if databse is there
+            mc.execute("create database GUI")
+        except:
+            print("database already created")
+    create_db()
 
-#creating table
-def create_table():
-    try:
-        mc.execute("create table creds(username int,password varchar(255))")
-    except:
-        print("table already created")
-create_table()
+    #using database
+    mc.execute("use GUI")
+
+    #creating table
+    def create_table():
+        try:                                         #error handling if table is there
+            mc.execute("create table creds(username int,password varchar(255))")
+        except:
+            print("table already created")
+    create_table()
 
 #register screen
 def register():
@@ -61,7 +73,8 @@ def register():
 
 def login():
 
-    #gui config for login screen
+    # gui config for login screen
+    global login_screen
     login_screen = Toplevel(root)
     login_screen.title("Login")
     login_screen.geometry("300x250")
@@ -115,8 +128,6 @@ def login_verify():
         b=mc.fetchall()
         if (password1,) in b:                                    #checking password
             login_sucess()
-            username_login_entry.delete(0, END)                  #deleting entries
-            password_login_entry.delete(0, END)
         else:
             password_not_recognised()
     else:
@@ -131,6 +142,8 @@ def user_exist():
     user_exist_message = messagebox.showwarning(title="Warning", message="Registration ID Already exist")
 
 def login_sucess():
+    login_screen.destroy()
+    #root.destroy()
     login_success_message= messagebox.showinfo(title="Success",message="Login Success")
 
 def password_not_recognised():
@@ -146,7 +159,7 @@ def main():
     root = Tk()
     root.geometry("500x375")
     root.title("Account Login")
-
+    connect_db()
     #lablels and buttons
     Label(text="CGPA Calculator", bg="Black", width="500", height="2", font=("Helvetica", 13), fg="white").pack()
     Label(text="").pack()
