@@ -89,6 +89,8 @@ def login():
     global username_login_entry
     global password_login_entry
 
+
+
     #labels and entryboxes
     Label(login_screen, text="Please enter details below to login").pack()
     Label(login_screen, text="").pack()
@@ -101,6 +103,16 @@ def login():
     password_login_entry = Entry(login_screen, textvariable=password_verify, show='*')
     password_login_entry.pack()
     Label(login_screen, text="").pack()
+
+    #Setting the values as per registered
+    try:
+        if(r_done):
+            print("done")
+            username_verify.set(username.get())
+            password_verify.set(password.get())
+    except:
+        pass
+
     Button(login_screen, text="Login", width=10, height=1, command=login_verify).pack()
 
 def register_user():
@@ -127,8 +139,8 @@ def register_user():
 
 def login_verify():
     username1 = username_verify.get()                            #getting id
-    unhashed_passwd = password_verify.get()                      #getting password
-    password1 = (md5(unhashed_passwd.encode())).hexdigest()      #creating hash of password
+    unhashedpasswd = password_verify.get()                      #getting password
+    password1 = (md5(unhashedpasswd.encode())).hexdigest()      #creating hash of password
     mc.execute("select username from creds")
     a=mc.fetchall()
     if (username1,) in a:                                        # Checking username
@@ -145,6 +157,9 @@ def login_verify():
 def register_sucess():
     register_screen.destroy()
     messagebox.showinfo(title="Success", message="ID Registered Successfully")
+    global r_done
+    r_done=True
+
 
 def user_exist():
     user_exist_message = messagebox.showwarning(title="Warning", message="Registration ID Already exist")
