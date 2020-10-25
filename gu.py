@@ -7,19 +7,40 @@ from tkinter import messagebox
 
 def term1():
     global term1_f
-    term1_f=Frame(frame1)
-    term1_f.pack(side=LEFT)
+    term1_f=Frame(frame1,bg="white",bd=5)
+    term1_f.pack(side=LEFT,padx=10,pady=10)
+    Label(term1_f, text="Sr No.", padx=3, pady=4).grid(row=0, column=0)
+    Label(term1_f, text="Sub code", padx=3, pady=4).grid(row=0, column=1)
+    Label(term1_f, text="CA1 Marks", padx=3, pady=4).grid(row=0, column=2)
+    Label(term1_f, text="CA2 Marks", padx=3, pady=4).grid(row=0, column=3)
+    Label(term1_f, text="CA3 Marks", padx=3, pady=4).grid(row=0, column=4)
+    Label(term1_f, text="MTE Marks", padx=3, pady=4).grid(row=0, column=5)
+    Label(term1_f, text="ETE Marks", padx=3, pady=4).grid(row=0, column=6)
+    Label(term1_f, text="Attandence", padx=3, pady=4).grid(row=0, column=7)
+    Label(term1_f, text="Practical", padx=3, pady=4).grid(row=0, column=8)
+    Label(term1_f, text="Obtained Marks", padx=3, pady=4).grid(row=0, column=9)
 
 
 def term2():
     global term2_f
-    term2_f=Frame(frame1)
-    term2_f.pack(side=RIGHT)
+    term2_f=Frame(frame1,bg="white",bd=5)
+    term2_f.pack(side=RIGHT,padx=10,pady=10)
+    Label(term2_f, text="Sr No.", padx=3, pady=4).grid(row=0, column=1)
+    Label(term2_f, text="Sub code", padx=3, pady=4).grid(row=0, column=2)
+    Label(term2_f, text="CA1 Marks", padx=3, pady=4).grid(row=0, column=3)
+    Label(term2_f, text="CA2 Marks", padx=3, pady=4).grid(row=0, column=4)
+    Label(term2_f, text="CA3 Marks", padx=3, pady=4).grid(row=0, column=5)
+    Label(term2_f, text="MTE Marks", padx=3, pady=4).grid(row=0, column=6)
+    Label(term2_f, text="ETE Marks", padx=3, pady=4).grid(row=0, column=7)
+    Label(term2_f, text="Attandence", padx=3, pady=4).grid(row=0, column=8)
+    Label(term2_f, text="Practical", padx=3, pady=4).grid(row=0, column=9)
+    Label(term2_f, text="Obtained Marks", padx=3, pady=4).grid(row=0, column=10)
+
 
 def year_frame():
     global frame1
-    frame1=Frame(root)
-    frame1.pack()
+    frame1=Frame(root,width=720,bg="blue")
+    frame1.pack(padx=4,pady=4)
     term1()
     term2()
 
