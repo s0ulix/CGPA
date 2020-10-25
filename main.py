@@ -151,8 +151,10 @@ def user_exist():
 
 def login_sucess():
     login_screen.destroy()
-    #root.destroy()
     login_success_message= messagebox.showinfo(title="Success",message="Login Success")
+    root.destroy()
+    global check_login
+    check_login=True
 
 def password_not_recognised():
     password_not_recognised_message = messagebox.showerror(title="Error", message="Invalid Password")
