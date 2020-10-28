@@ -1,13 +1,14 @@
 from tkinter import *
-from tkinter import END
 from tkinter import messagebox
 import pickle
 
 def create():
+    file_input.destroy()
+    config.destroy()
     file = open(name.get(), "ab")
     pickle.dump(conf, file)
     file.close()
-    file_input.destroy()
+
 
 def makefile():
     global file_input
@@ -52,11 +53,11 @@ def save():
 
 
 def head(n):
-    Label(config, text=" ", bg="#454545").grid(row=1, column=0)
-    Label(config, text=" ", bg="#454545").grid(row=2, column=0)
+    Label(config, text="" ,bg="#454545").grid(row=2, column=0)
+    Label(config, text="",bg="#454545").grid(row=3, column=0)
     count = 1
     for i in n:
-        Label(config, text=i, padx=3, pady=4).grid(row=2, column=count)
+        Label(config, text=i, padx=3, pady=4).grid(row=3, column=count)
         count += 1
 
 
@@ -68,13 +69,13 @@ def add_subject():
         return
 
     sub_wht.append(StringVar())
-    Entry(config, width="8", textvariable=sub_wht[-1]).grid(row=2 + count1, column=2)
-    Label(config, text=" %d  " % count1).grid(row=2 + count1, column=1)
+    Entry(config, width="8", textvariable=sub_wht[-1]).grid(row=3 + count1, column=2)
+    Label(config, text=" %d  " % count1).grid(row=3 + count1, column=1)
     count = 3
     ent = []
-    for i in range(1, 8):
+    for i in range(1, 6):
         sub_wht.append(IntVar())
-        Entry(config, width="4", textvariable=sub_wht[-1]).grid(row=2 + count1, column=count)
+        Entry(config, width="4", textvariable=sub_wht[-1]).grid(row=3 + count1, column=count)
         count += 1
     count1 += 1
 
@@ -84,19 +85,22 @@ def config_window():
     config = Tk()
     logo = PhotoImage(file='logo.png')
     config.configure(bg="#454545")
-    config.geometry("590x510")
+    config.geometry("440x320")
     config.title("Config")
     config.iconphoto(False, logo)
+    backgound=PhotoImage(file='bg1.png')
+    Label(config,image=backgound).place(x=0,y=0,relwidth=1,relheight=1)
 
     global count1
     global a
     global sub_wht
     sub_wht = []
     count1 = 1
-    a = ["Sr No. ", "Sub code", "CA1 Marks", "CA2 Marks", "CA3 Marks", "MTE Marks", "ETE Marks", "Attandence","Practical"]
-    Button(text="Add", height="1", width="4", font=("Helvetica", 13), bg="#008080", fg="white", command=add_subject).grid(row=0, column=1)
-    Button(text="Save", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=save).grid(row=0, column=9)
-    Button(text="Reset", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=reset).grid(row=0, column=5)
+    a = ["Sr No. ", "Sub code", "CA Marks", "MTE Marks", "ETE Marks", "Attandence","Practical"]
+    Label(bg="#454545").grid(row=0,column=0)
+    Button(text="Add", height="1", width="4", font=("Helvetica", 13), bg="#008080", fg="white", command=add_subject).grid(row=1, column=1)
+    Button(text="Save", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=save).grid(row=1, column=7)
+    Button(text="Reset", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=reset).grid(row=1, column=4)
     head(a)
     config.mainloop()
 
