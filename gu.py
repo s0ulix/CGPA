@@ -9,7 +9,7 @@ c()
 
 def create():
     file_input.destroy()
-    config.destroy()
+    configw.destroy()
     file = open(name.get(), "ab")
     pickle.dump(conf, file)
     file.close()
