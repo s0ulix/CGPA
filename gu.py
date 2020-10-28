@@ -3,9 +3,18 @@ from main import *
 from main import connect_db as c
 from tkinter import *
 from tkinter import messagebox
+from tkinter.filedialog import askopenfile
 import pickle
 c()
 
+def calculate():
+    pass
+
+def fileopen():
+    file=askopenfile(mode='rb')
+    global cont
+    cont=pickle.load(file)
+    file.close()
 
 def create():
     file_input.destroy()
@@ -57,34 +66,36 @@ def save():
     makefile()
 
 
-def head():
-    global a
-    Label(configw, text="" ,bg="#454545").grid(row=2, column=0)
-    Label(configw, text="",bg="#454545").grid(row=3, column=0)
+def head(n,c,d):
+    Label(c, text="" ,bg="#454545").grid(row=(2+d), column=0)
+    Label(c, text="",bg="#454545").grid(row=(3+d), column=0)
     count = 1
-    for i in a:
-        Label(configw, text=i, padx=3, pady=4).grid(row=3, column=count)
+    for i in n:
+        Label(c, text=i, padx=3, pady=4).grid(row=(3+d), column=count)
         count += 1
 
 
-def add_subject():
-    global count1
+def add_subject(a,c,d):
     global sub_wht
+    global count1
     if (count1 > 10):
         messagebox.showinfo(title="Limit exceed", message="You can add only 10 subjects")
         return
 
     sub_wht.append(StringVar())
-    Entry(configw, width="8", textvariable=sub_wht[-1]).grid(row=3 + count1, column=2)
-    Label(configw, text=" %d  " % count1).grid(row=3 + count1, column=1)
+    Entry(c, width="8", textvariable=sub_wht[-1]).grid(row=3 + count1+d, column=2)
+    Label(c, text=" %d  " % count1).grid(row=3 + count1+d, column=1)
     count = 3
-    ent = []
-    for i in range(1, 6):
+    for i in range(1, len(a)):
         sub_wht.append(IntVar())
-        Entry(configw, width="4", textvariable=sub_wht[-1]).grid(row=3 + count1, column=count)
+        Entry(c, width="4", textvariable=sub_wht[-1]).grid(row=3 + count1+d, column=count)
         count += 1
     count1 += 1
 
+def add_s():
+    global a
+    global count1
+    add_subject(a,configw,0)
 
 def config_window():
     global configw
@@ -104,70 +115,73 @@ def config_window():
     count1 = 1
     a = ["Sr No. ", "Sub code", "CA Marks", "MTE Marks", "ETE Marks", "Attandence","Practical"]
     Label(configw,bg="#454545").grid(row=0,column=0)
-    Button(configw,text="Add", height="1", width="4", font=("Helvetica", 13), bg="#008080", fg="white", command=add_subject).grid(row=1, column=1)
+    Button(configw,text="Add", height="1", width="4", font=("Helvetica", 13), bg="#008080", fg="white", command=add_s).grid(row=1, column=1)
     Button(configw,text="Save", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=save).grid(row=1, column=7)
     Button(configw,text="Reset", height="1", width="5", font=("Helvetica", 13), bg="#008080", fg="white", command=reset).grid(row=1, column=4)
-    head()
+    head(a,configw,0)
     configw.mainloop()
 
 def cn():
     config_window()
 
-def term1():
-    global term1_f
-    term1_f=Frame(frame1,bg="white",bd=5)
-    term1_f.pack(side=LEFT,padx=10,pady=10)
-    Label(term1_f, text="Sr No.", padx=3, pady=4).grid(row=0, column=0)
-    Label(term1_f, text="Sub code", padx=3, pady=4).grid(row=0, column=1)
-    Label(term1_f, text="CA1 Marks", padx=3, pady=4).grid(row=0, column=2)
-    Label(term1_f, text="CA2 Marks", padx=3, pady=4).grid(row=0, column=3)
-    Label(term1_f, text="CA3 Marks", padx=3, pady=4).grid(row=0, column=4)
-    Label(term1_f, text="MTE Marks", padx=3, pady=4).grid(row=0, column=5)
-    Label(term1_f, text="ETE Marks", padx=3, pady=4).grid(row=0, column=6)
-    Label(term1_f, text="Attandence", padx=3, pady=4).grid(row=0, column=7)
-    Label(term1_f, text="Practical", padx=3, pady=4).grid(row=0, column=8)
-    Label(term1_f, text="Obtained Marks", padx=3, pady=4).grid(row=0, column=9)
+def add_sub(a,c,d,i,j):
+    global sub_marks
+    global count1
+    Label(c, text=i).grid(row=3 + count1 + d, column=2)
+    Label(c, text=" %d  " % j).grid(row=3 + count1 + d, column=1)
+    count = 3
+    for i in range(1, len(a)-2):
+        sub_marks.append(IntVar())
+        Entry(c, width="4", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
+        count += 1
+    count1 += 1
 
+def add_term():
+    global sub
+    if(sub>10):
+        messagebox.showerror(title="Sem error",message="No more than 2 semster")
+    else:
+        a = ["Sr No. ", "Sub code", "CA1 Marks","CA2 Marks","CA3 Marks", "MTE Marks", "ETE Marks", "Attandence", "Practical","Obtainde Marks"]
+        head(a,root,sub)
+        for j,i in enumerate(cont):
+            add_sub(a,root,sub,i,j+1)
+        sub=sub+10
 
-def term2():
-    global term2_f
-    term2_f=Frame(frame1,bg="white",bd=5)
-    term2_f.pack(side=RIGHT,padx=10,pady=10)
-    Label(term2_f, text="Sr No.", padx=3, pady=4).grid(row=0, column=1)
-    Label(term2_f, text="Sub code", padx=3, pady=4).grid(row=0, column=2)
-    Label(term2_f, text="CA1 Marks", padx=3, pady=4).grid(row=0, column=3)
-    Label(term2_f, text="CA2 Marks", padx=3, pady=4).grid(row=0, column=4)
-    Label(term2_f, text="CA3 Marks", padx=3, pady=4).grid(row=0, column=5)
-    Label(term2_f, text="MTE Marks", padx=3, pady=4).grid(row=0, column=6)
-    Label(term2_f, text="ETE Marks", padx=3, pady=4).grid(row=0, column=7)
-    Label(term2_f, text="Attandence", padx=3, pady=4).grid(row=0, column=8)
-    Label(term2_f, text="Practical", padx=3, pady=4).grid(row=0, column=9)
-    Label(term2_f, text="Obtained Marks", padx=3, pady=4).grid(row=0, column=10)
-
-
-def year_frame():
-    global frame1
-    frame1=Frame(root,width=720,bg="blue")
-    frame1.pack(padx=4,pady=4)
-    term1()
-    term2()
+def resetm():
+    global sub_marks
+    for i in sub_marks:
+        i.set(0)
 
 def cgpa_calc():
     global root
     root = Tk()
     logo = PhotoImage(file='logo.png')
     root.configure(bg="grey")
-    root.geometry("1280x720")
+    root.geometry("700x450")
     root.title("CGPA Calculator")
     root.iconphoto(False, logo)
+    backgound = PhotoImage(file='bg2.png')
+    Label(root, image=backgound).place(x=0, y=0, relwidth=1, relheight=1)
+    global sub
+    sub=0
+    global cont
+    file=open('configw','rb')
+    cont=pickle.load(file)
+    file.close()
+    global count1
+    count1=1
+    global sub_marks
+    sub_marks = []
+
+    Button(root,text="Calculate",command=calculate)
 
 
     menubar = Menu(root)
     file = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='File', menu=file)
     file.add_command(label='Save', command=None)
-    file.add_command(label='Reset', command=None)
-    file.add_command(label='Add year', command=year_frame)
+    file.add_command(label='Reset', command=resetm)
+    file.add_command(label='Add year', command=add_term)
     file.add_separator()
     file.add_command(label='Exit', command=root.destroy)
 
@@ -175,7 +189,7 @@ def cgpa_calc():
     menubar.add_cascade(label='Config', menu=config)
     config.add_command(label='New config', command=cn)
     config.add_separator()
-    config.add_command(label='Import config', command=None)
+    config.add_command(label='Import config', command=fileopen)
 
     help = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='Help', menu=help)

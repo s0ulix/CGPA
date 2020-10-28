@@ -1,5 +1,7 @@
 import pickle
-file=open("b","rb")
+file=open("configw","rb")
 a=pickle.load(file)
 file.close()
-print(a)
+#print(a)
+b={'a':'b','c':'d'}
+print(len(b))
