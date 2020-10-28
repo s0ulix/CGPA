@@ -8,7 +8,67 @@ import pickle
 c()
 
 def calculate():
-    pass
+    global sub_marks
+    for a,j in enumerate(cont):
+        if(sub_marks[a*8].get()>30):
+            messagebox.showerror(title="Limit exceed",message="Max marks for CA1 is 30")
+        else:
+            ca1=sub_marks[a*8].get()
+        if (sub_marks[a * 8+1].get() > 30):
+            messagebox.showerror(title="Limit exceed", message="Max marks for CA2 is 30")
+        else:
+            ca2 = sub_marks[a * 8+1].get()
+        if (sub_marks[a * 8+2].get() > 30):
+            messagebox.showerror(title="Limit exceed", message="Max marks for CA3 is 30")
+        else:
+            ca3 = sub_marks[a * 8+2].get()
+        if (sub_marks[a * 8+3].get() > 40):
+            messagebox.showerror(title="Limit exceed", message="Max marks for MTE is 40")
+        else:
+            mte = sub_marks[a * 8+3].get()
+        if (sub_marks[a * 8+4].get() > 70):
+            messagebox.showerror(title="Limit exceed", message="Max marks for ETE is 70")
+        else:
+            ete = sub_marks[a * 8+4].get()
+        if (sub_marks[a * 8+5].get() > 100):
+            messagebox.showerror(title="Limit exceed", message="Max Attandence is 100%")
+        else:
+            att = sub_marks[a * 8+5].get()
+        if (sub_marks[a * 8+6].get() > 100):
+            messagebox.showerror(title="Limit exceed", message="Max marks for practical is 100")
+        else:
+            prac = sub_marks[a * 8+6].get()
+        prac=prac*(cont[j][4]/100)
+        ete=ete*(cont[j][2]/70)
+        mte=mte*(cont[j][1]/40)
+        if(att>=90):
+            att=5
+        elif(att>=85):
+            att=4
+        elif(att>=80):
+            att=3
+        elif(att>=75):
+            att=2
+        else:
+            sub_marks[(a+1)*8-1].set(0)
+            continue
+        att=att*(cont[j][3]/5)
+        if(ca1>=ca2):
+            ca=ca1
+            if(ca2>=ca3):
+                ca=ca+ca2
+            else:
+                ca=ca+ca3
+        else:
+            ca=ca2
+            if(ca1>=ca3):
+                ca=ca+ca1
+            else:
+                ca=ca+ca3
+        ca=ca*(cont[j][0]/60)
+        obt=prac+ete+mte+att+ca
+        sub_marks[(a+1)*8-1].set(obt)
+
 
 def fileopen():
     file=askopenfile(mode='rb')
@@ -86,7 +146,7 @@ def add_subject(a,c,d):
     Entry(c, width="8", textvariable=sub_wht[-1]).grid(row=3 + count1+d, column=2)
     Label(c, text=" %d  " % count1).grid(row=3 + count1+d, column=1)
     count = 3
-    for i in range(1, len(a)):
+    for i in range(1, len(a)-1):
         sub_wht.append(IntVar())
         Entry(c, width="4", textvariable=sub_wht[-1]).grid(row=3 + count1+d, column=count)
         count += 1
@@ -134,6 +194,8 @@ def add_sub(a,c,d,i,j):
         sub_marks.append(IntVar())
         Entry(c, width="4", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
         count += 1
+    sub_marks.append(StringVar())
+    Entry(c, width="4", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
     count1 += 1
 
 def add_term():
@@ -173,7 +235,7 @@ def cgpa_calc():
     global sub_marks
     sub_marks = []
 
-    Button(root,text="Calculate",command=calculate)
+    Button(root,text="Calculate",command=calculate).grid(row=1,column=10)
 
 
     menubar = Menu(root)

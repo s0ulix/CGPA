@@ -1,5 +1,2 @@
-import pickle
-file=open("b","rb")
-a=pickle.load(file)
-file.close()
-print(a)
+a=[1,2,3,4,5,6,7]
+print(len(a))
