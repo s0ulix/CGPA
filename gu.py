@@ -7,40 +7,40 @@ from tkinter.filedialog import askopenfile
 import pickle
 c()
 
-def calculate():
+def calculate(d):
     global sub_marks
     global count1
     global sub
     grade=[]
     for a,j in enumerate(cont):
-        if(sub_marks[a*8].get()>30):
+        if(sub_marks[(a+d)*8].get()>30):
             messagebox.showerror(title="Limit exceed",message="Max marks for CA1 is 30")
         else:
-            ca1=sub_marks[a*8].get()
-        if (sub_marks[a * 8+1].get() > 30):
+            ca1=sub_marks[(a+d)*8].get()
+        if (sub_marks[(a+d) * 8+1].get() > 30):
             messagebox.showerror(title="Limit exceed", message="Max marks for CA2 is 30")
         else:
-            ca2 = sub_marks[a * 8+1].get()
-        if (sub_marks[a * 8+2].get() > 30):
+            ca2 = sub_marks[(a+d) * 8+1].get()
+        if (sub_marks[(a+d) * 8+2].get() > 30):
             messagebox.showerror(title="Limit exceed", message="Max marks for CA3 is 30")
         else:
-            ca3 = sub_marks[a * 8+2].get()
-        if (sub_marks[a * 8+3].get() > 40):
+            ca3 = sub_marks[(a+d) * 8+2].get()
+        if (sub_marks[(a+d) * 8+3].get() > 40):
             messagebox.showerror(title="Limit exceed", message="Max marks for MTE is 40")
         else:
-            mte = sub_marks[a * 8+3].get()
-        if (sub_marks[a * 8+4].get() > 70):
+            mte = sub_marks[(a+d) * 8+3].get()
+        if (sub_marks[(a+d) * 8+4].get() > 70):
             messagebox.showerror(title="Limit exceed", message="Max marks for ETE is 70")
         else:
-            ete = sub_marks[a * 8+4].get()
-        if (sub_marks[a * 8+5].get() > 100):
+            ete = sub_marks[(a+d) * 8+4].get()
+        if (sub_marks[(a+d) * 8+5].get() > 100):
             messagebox.showerror(title="Limit exceed", message="Max Attandence is 100%")
         else:
-            att = sub_marks[a * 8+5].get()
-        if (sub_marks[a * 8+6].get() > 100):
+            att = sub_marks[(a+d) * 8+5].get()
+        if (sub_marks[(a+d) * 8+6].get() > 100):
             messagebox.showerror(title="Limit exceed", message="Max marks for practical is 100")
         else:
-            prac = sub_marks[a * 8+6].get()
+            prac = sub_marks[(a+d) * 8+6].get()
         prac=round(prac*(cont[j][4]/100))
         ete=round(ete*(cont[j][2]/70))
         mte=round(mte*(cont[j][1]/40))
@@ -54,7 +54,7 @@ def calculate():
             att=2
         else:
             att=0
-            sub_marks[(a + 1) * 8 - 1].set("0, F")
+            sub_marks[(a +d+ 1) * 8 - 1].set("0, F")
             continue
         att=att*(cont[j][3]/5)
         if(ca1>=ca2):
@@ -98,9 +98,10 @@ def calculate():
         else:
             obt=str(obt)+", F"
             grade.append(0)
-        sub_marks[(a+1)*8-1].set(obt)
-    tgpa=round(sum(grade)/len(grade),2)
-    Label(text="TGPA: %s"%tgpa).grid(row=4+count1+sub,column=5)
+        sub_marks[(a+1+d)*8-1].set(obt)
+    tgpa=[]
+    tgpa.append(round(sum(grade)/len(grade),2))
+    Label(text="TGPA: %s"%tgpa[d]).grid(row=4+count1+sub,column=5)
 
 
 def fileopen():
@@ -232,8 +233,16 @@ def add_sub(a,c,d,i,j):
     Entry(c, width="11", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
     count1 += 1
 
+def calc1():
+    calculate(0)
+
+def calc2():
+    global cont
+    calculate(len(cont))
+
 def add_term():
     global sub
+    global term
     if(sub>10):
         messagebox.showerror(title="Sem error",message="No more than 2 semster")
     else:
@@ -241,8 +250,12 @@ def add_term():
         head(a,root,sub)
         for j,i in enumerate(cont):
             add_sub(a,root,sub,i,j+1)
-        Button(root, text="Calculate", command=calculate).grid(row=3 + count1+sub, column=10)
+        if(term==0):
+            Button(root, text="Calculate", command=calc1).grid(row=3 + count1+sub, column=10)
+        else:
+            Button(root, text="Calculate", command=calc2).grid(row=3 + count1 + sub, column=10)
         sub=sub+10
+    term+=1
 
 def resetm():
     global sub_marks
@@ -251,6 +264,9 @@ def resetm():
 
 def contact():
     messagebox.showinfo(title="Contact info",message="Divya: sombeerjatt@gmail.com/7015681867 \nAditya: adityapathak1609@gmail.com/8178616656")
+
+def faq():
+    pass
 
 def cgpa_calc():
     global root
@@ -272,6 +288,8 @@ def cgpa_calc():
     count1=1
     global sub_marks
     sub_marks = []
+    global term
+    term=0
 
 
 
@@ -279,9 +297,8 @@ def cgpa_calc():
     menubar = Menu(root)
     file = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='File', menu=file)
-    file.add_command(label='Save', command=None)
-    file.add_command(label='Reset', command=resetm)
     file.add_command(label='Add Term', command=add_term)
+    file.add_command(label='Reset', command=resetm)
     file.add_separator()
     file.add_command(label='Exit', command=root.destroy)
 
@@ -297,7 +314,7 @@ def cgpa_calc():
     help = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='Help', menu=help)
     help.add_command(label='Contact Us', command=contact)
-    help.add_command(label='Faq', command=None)
+    help.add_command(label='Faq', command=faq)
 
 
     root.config(menu=menubar)
