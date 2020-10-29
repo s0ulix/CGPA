@@ -4,6 +4,8 @@ from tkinter import messagebox
 import mysql.connector as m
 from hashlib import md5
 
+global admin
+admin=False
 
 #connecting to database
 def connect_db():
@@ -148,6 +150,11 @@ def login_verify():
         b=mc.fetchall()
         if (password1,) in b:                                    #checking password
             login_sucess()
+            global admin
+            if(username1==1):
+                admin=True
+            else:
+                admin=False
         else:
             password_not_recognised()
     else:

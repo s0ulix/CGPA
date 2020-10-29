@@ -9,6 +9,9 @@ c()
 
 def calculate():
     global sub_marks
+    global count1
+    global sub
+    grade=[]
     for a,j in enumerate(cont):
         if(sub_marks[a*8].get()>30):
             messagebox.showerror(title="Limit exceed",message="Max marks for CA1 is 30")
@@ -38,9 +41,9 @@ def calculate():
             messagebox.showerror(title="Limit exceed", message="Max marks for practical is 100")
         else:
             prac = sub_marks[a * 8+6].get()
-        prac=prac*(cont[j][4]/100)
-        ete=ete*(cont[j][2]/70)
-        mte=mte*(cont[j][1]/40)
+        prac=round(prac*(cont[j][4]/100))
+        ete=round(ete*(cont[j][2]/70))
+        mte=round(mte*(cont[j][1]/40))
         if(att>=90):
             att=5
         elif(att>=85):
@@ -50,7 +53,8 @@ def calculate():
         elif(att>=75):
             att=2
         else:
-            sub_marks[(a+1)*8-1].set(0)
+            att=0
+            sub_marks[(a + 1) * 8 - 1].set("0, F")
             continue
         att=att*(cont[j][3]/5)
         if(ca1>=ca2):
@@ -65,9 +69,38 @@ def calculate():
                 ca=ca+ca1
             else:
                 ca=ca+ca3
-        ca=ca*(cont[j][0]/60)
-        obt=prac+ete+mte+att+ca
+        ca=round(ca*(cont[j][0]/60))
+        if(att==0):
+            obt=0
+        else:
+            obt=round(prac+ete+mte+att+ca)
+        if(obt>=95):
+            obt=str(obt)+", O"
+            grade.append(10)
+        elif(obt>=90):
+            obt = str(obt) + ", A+"
+            grade.append(9)
+        elif (obt >= 80):
+            obt = str(obt) + ", A-"
+            grade.append(8)
+        elif (obt >= 70):
+            obt = str(obt) + ", B+"
+            grade.append(7)
+        elif (obt >= 60):
+            obt = str(obt) + ", B-"
+            grade.append(6)
+        elif (obt >= 50):
+            obt = str(obt) + ", C"
+            grade.append(5)
+        elif (obt >= 34):
+            obt = str(obt) + ", D"
+            grade.append(4)
+        else:
+            obt=str(obt)+", F"
+            grade.append(0)
         sub_marks[(a+1)*8-1].set(obt)
+    tgpa=round(sum(grade)/len(grade),2)
+    Label(text="TGPA: %s"%tgpa).grid(row=4+count1+sub,column=5)
 
 
 def fileopen():
@@ -187,6 +220,7 @@ def cn():
 def add_sub(a,c,d,i,j):
     global sub_marks
     global count1
+
     Label(c, text=i).grid(row=3 + count1 + d, column=2)
     Label(c, text=" %d  " % j).grid(row=3 + count1 + d, column=1)
     count = 3
@@ -195,7 +229,7 @@ def add_sub(a,c,d,i,j):
         Entry(c, width="4", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
         count += 1
     sub_marks.append(StringVar())
-    Entry(c, width="4", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
+    Entry(c, width="11", textvariable=sub_marks[-1]).grid(row=3 + count1 + d, column=count)
     count1 += 1
 
 def add_term():
@@ -203,10 +237,11 @@ def add_term():
     if(sub>10):
         messagebox.showerror(title="Sem error",message="No more than 2 semster")
     else:
-        a = ["Sr No. ", "Sub code", "CA1 Marks","CA2 Marks","CA3 Marks", "MTE Marks", "ETE Marks", "Attandence", "Practical","Obtainde Marks"]
+        a = ["Sr No. ", "Sub code", "CA1 Marks","CA2 Marks","CA3 Marks", "MTE Marks", "ETE Marks", "Attandence(%)", "Practical","Obtained Marks, Grade"]
         head(a,root,sub)
         for j,i in enumerate(cont):
             add_sub(a,root,sub,i,j+1)
+        Button(root, text="Calculate", command=calculate).grid(row=3 + count1+sub, column=10)
         sub=sub+10
 
 def resetm():
@@ -214,12 +249,15 @@ def resetm():
     for i in sub_marks:
         i.set(0)
 
+def contact():
+    messagebox.showinfo(title="Contact info",message="Divya: sombeerjatt@gmail.com/7015681867 \nAditya: adityapathak1609@gmail.com/8178616656")
+
 def cgpa_calc():
     global root
     root = Tk()
     logo = PhotoImage(file='logo.png')
     root.configure(bg="grey")
-    root.geometry("700x450")
+    root.geometry("740x470")
     root.title("CGPA Calculator")
     root.iconphoto(False, logo)
     backgound = PhotoImage(file='bg2.png')
@@ -235,7 +273,7 @@ def cgpa_calc():
     global sub_marks
     sub_marks = []
 
-    Button(root,text="Calculate",command=calculate).grid(row=1,column=10)
+
 
 
     menubar = Menu(root)
@@ -243,19 +281,22 @@ def cgpa_calc():
     menubar.add_cascade(label='File', menu=file)
     file.add_command(label='Save', command=None)
     file.add_command(label='Reset', command=resetm)
-    file.add_command(label='Add year', command=add_term)
+    file.add_command(label='Add Term', command=add_term)
     file.add_separator()
     file.add_command(label='Exit', command=root.destroy)
 
-    config = Menu(menubar, tearoff=0)
-    menubar.add_cascade(label='Config', menu=config)
-    config.add_command(label='New config', command=cn)
-    config.add_separator()
-    config.add_command(label='Import config', command=fileopen)
+    if(admin):
+        config = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label='Config', menu=config)
+        config.add_command(label='New config', command=cn)
+        config.add_separator()
+        config.add_command(label='Import config', command=fileopen)
+    else:
+        pass
 
     help = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='Help', menu=help)
-    help.add_command(label='Contact Us', command=None)
+    help.add_command(label='Contact Us', command=contact)
     help.add_command(label='Faq', command=None)
 
 
