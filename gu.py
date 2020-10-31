@@ -6,7 +6,7 @@ from tkinter import messagebox
 from tkinter.filedialog import askopenfile
 import pickle
 c()
-
+#change
 def calculate(d):
     global sub_marks
     global count1
