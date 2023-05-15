@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 import mysql.connector as m
 from hashlib import md5
-
+from os import env
 global admin
 admin=False
 
@@ -11,7 +11,8 @@ admin=False
 def connect_db():
     try:                                           #error handling for databse connection
         global mydb
-        mydb = m.connect( host="127.0.0.1", user="root",password="Jaatram@1729")
+        pass=env.password
+        mydb = m.connect( host="127.0.0.1", user="root",password=pass)
     except:
         warning="Check if database is started or not \n If started enter your creds in command line"
         messagebox.showwarning(title="Db error",message=warning)
